@@ -1,4 +1,4 @@
-# LAM Action Integrity Architect: Teknik Derinlemesine Analiz Raporu
+# LAM Action Integrity Architect
 
 **Hazırlayan:** Aziz Efe Çırak  
 **Tarih:** 19 Ocak 2026  
