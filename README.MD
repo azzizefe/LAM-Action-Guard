@@ -1,5 +1,3 @@
-# technical_analysis.md
-
 # LAM Action Integrity Architect: Teknik Derinlemesine Analiz Raporu
 
 **Hazırlayan:** Aziz Efe Çırak  
