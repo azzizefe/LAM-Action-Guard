@@ -1,6 +1,3 @@
-
-# research.gemini-fast.prompt.md
-
 ## Araştırma Süreci ve Kullanılan Promptlar
 **Proje:** LAM Action Integrity Architect  
 **Model:** Gemini 1.5 Pro / Flash  
