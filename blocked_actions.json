@@ -1,0 +1,12 @@
+[
+  {
+    "tool_name": "database_tool",
+    "forbidden_params": ["DROP", "DELETE", "TRUNCATE"],
+    "reason": "Yıkıcı veritabanı komutları engellendi."
+  },
+  {
+    "tool_name": "email_tool",
+    "forbidden_domains": ["@temp-mail.org", "@guerrillamail.com"],
+    "reason": "Geçici e-posta servislerine gönderim yasak."
+  }
+]
