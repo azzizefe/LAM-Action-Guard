@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LAM Action Integrity Architect - Agentic AI Security Project by Aziz Efe Çırak">
+    <meta name="author" content="Aziz Efe Çırak">
+    <title>LAM Action Integrity Architect | Security Research</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;300;400;700&family=Inter:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* * ==========================================
+         * CORE VARIABLES & RESET
+         * ==========================================
+         */
+        :root {
+            --primary-color: #00f2ea;
+            --secondary-color: #ff0055;
+            --bg-color: #050a14;
+            --card-bg: #0a1124;
+            --text-main: #e0e6ed;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+            --accent-glow: rgba(0, 242, 234, 0.15);
+            --danger-glow: rgba(255, 0, 85, 0.15);
+            --font-main: 'Inter', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+            --transition-speed: 0.3s;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition-speed);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Scrollbar Customization */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* * ==========================================
+         * UTILITY CLASSES
+         * ==========================================
+         */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary-color), #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .badge-primary {
+            background: rgba(0, 242, 234, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(0, 242, 234, 0.2);
+        }
+
+        .badge-danger {
+            background: rgba(255, 0, 85, 0.1);
+            color: var(--secondary-color);
+            border: 1px solid rgba(255, 0, 85, 0.2);
+        }
+
+        /* * ==========================================
+         * HEADER & NAVIGATION
+         * ==========================================
+         */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(5, 10, 20, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-family: var(--font-code);
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: var(--transition-speed);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 5px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: var(--transition-speed);
+        }
+
+        .lang-btn.active {
+            background: var(--primary-color);
+            color: #000;
+        }
+
+        /* * ==========================================
+         * HERO SECTION
+         * ==========================================
+         */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: radial-gradient(circle at top right, rgba(0, 242, 234, 0.05), transparent 40%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            max-width: 600px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all var(--transition-speed);
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 242, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #fff;
+            box-shadow: 0 0 30px rgba(0, 242, 234, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hero Background Grid Animation */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--border-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.1;
+            z-index: 0;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+        }
+
+        /* * ==========================================
+         * ARCHITECTURE SECTION (Visual)
+         * ==========================================
+         */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .arch-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-speed);
+        }
+
+        .arch-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .arch-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .arch-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .arch-icon {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .arch-title {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .arch-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* * ==========================================
+         * RESEARCH TABS
+         * ==========================================
+         */
+        .tabs-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 50px;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn {
+            padding: 20px 30px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: var(--font-code);
+            font-weight: 600;
+            transition: var(--transition-speed);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            background: rgba(0, 242, 234, 0.05);
+            box-shadow: inset 0 -2px 0 var(--primary-color);
+        }
+
+        .tab-content {
+            padding: 40px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Markdown/Code styling within tabs */
+        .md-content h3 {
+            color: var(--text-main);
+            margin: 25px 0 15px;
+            font-size: 1.2rem;
+        }
+
+        .md-content p {
+            margin-bottom: 15px;
+            color: var(--text-muted);
+        }
+
+        .md-content ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .md-content li {
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            list-style-type: square;
+        }
+
+        .code-block {
+            background: #0d1526;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .code-block::after {
+            content: 'MD';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: var(--border-color);
+            font-weight: bold;
+        }
+
+        /* * ==========================================
+         * TERMINAL SIMULATION
+         * ==========================================
+         */
+        .terminal {
+            background: #0f0f0f;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            font-family: var(--font-code);
+            overflow: hidden;
+            border: 1px solid #333;
+            margin-top: 40px;
+        }
+
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 10px 15px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid #333;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red {
+            background: #ff5f56;
+        }
+
+        .dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .dot.green {
+            background: #27c93f;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            color: #d4d4d4;
+            font-size: 0.9rem;
+        }
+
+        .cmd {
+            color: var(--primary-color);
+        }
+
+        .arg {
+            color: var(--secondary-color);
+        }
+
+        .output {
+            color: #888;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: var(--primary-color);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* * ==========================================
+         * TEAM & FOOTER
+         * ==========================================
+         */
+        .team-section {
+            background: linear-gradient(180deg, var(--bg-color) 0%, var(--card-bg) 100%);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .profile-card {
+            text-align: center;
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-color);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #1e293b;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 50px 0;
+            background: #02040a;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* * ==========================================
+         * RESPONSIVE
+         * ==========================================
+         */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            /* Simplified for mobile */
+            .tabs-header {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="grid-bg"></div>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color);">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    LAM <span>Architect</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#hero" data-i18n="nav_home">Ana Sayfa</a>
+                    <a href="#architecture" data-i18n="nav_arch">Mimari</a>
+                    <a href="#research" data-i18n="nav_research">Araştırma</a>
+                    <a href="#methodology" data-i18n="nav_method">Yöntem</a>
+                    <a href="#team" data-i18n="nav_team">Ekip</a>
+                </div>
+                <div class="lang-switch">
+                    <button class="lang-btn active" onclick="setLanguage('tr')">TR</button>
+                    <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <span class="badge badge-primary" data-i18n="hero_badge">Siber Güvenlik Projesi</span>
+                <h1 data-i18n="hero_title">
+                    Otonom Ajanlar için <br>
+                    <span class="text-gradient">Eylem Bütünlüğü</span> Mimarisi
+                </h1>
+                <p class="hero-subtitle" data-i18n="hero_sub">
+                    Büyük Eylem Modellerinin (LAM) gerçekleştirdiği otonom API çağrılarını güvence altına alan, Action
+                    Hijacking ve Indirect Injection saldırılarına karşı yeni nesil koruma kalkanı.
+                </p>
+                <div class="cta-group">
+                    <a href="#architecture" class="btn btn-primary">
+                        <span data-i18n="btn_explore">Mimariyi Keşfet</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <a href="#research" class="btn btn-outline" data-i18n="btn_docs">Dokümanları İncele</a>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                        <span style="margin-left: 10px; color: #666; font-size: 0.8rem;">root@lam-architect:~</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div><span class="cmd">user@ist-sec:~$</span> ./check_integrity.sh --target=BankingAgent</div>
+                        <span class="output">[INIT] Bağlantı kuruluyor...</span>
+                        <span class="output">[INFO] Niyet-Eylem Doğrulama Modülü: <span
+                                style="color:var(--primary-color)">AKTİF</span></span>
+                        <span class="output">[INFO] Guardrails Politikaları: YÜKLENDİ (v1.2)</span>
+                        <span class="output">[TEST] Simüle edilmiş 'SQL Injection' saldırısı algılandı.</span>
+                        <span class="output" style="color:var(--secondary-color)">[BLOCK] Eylem durduruldu. (Risk Skoru:
+                            98/100)</span>
+                        <div><span class="cmd">user@ist-sec:~$</span> <span class="cursor"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="section-padding">
+        <div class="container">
+            <span class="badge badge-danger" data-i18n="arch_badge">Çözüm Mimarisi</span>
+            <h2 style="font-size: 2.5rem; margin: 15px 0;" data-i18n="arch_title">4 Katmanlı Güvenlik Modeli</h2>
+            <p style="color: var(--text-muted); max-width: 600px;" data-i18n="arch_desc">
+                Bu proje, klasik güvenlik duvarlarının yetersiz kaldığı "ajan tabanlı" saldırılar için özel olarak
+                tasarlanmış modüller içerir.
+            </p>
+
+            <div class="arch-grid">
+                <div class="arch-card">
+                    <div class="arch-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="arch-title" data-i18n="card1_title">Riskli Eylem Kütüphanesi</h3>
+                    <p class="arch-desc" data-i18n="card1_desc">
+                        Kritik API işlemlerini (silme, transfer, yetki) regex tabanlı kurallarla kategorize eden ve
+                        önleyen politika motoru.
+                    </p>
+                </div>
+
+                <div class="arch-card">
+                    <div class="arch-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="arch-title" data-i18n="card2_title">Niyet-Eylem Doğrulama</h3>
+                    <p class="arch-desc" data-i18n="card2_desc">
+                        Kullanıcının doğal dil komutu ile modelin JSON çıktısını karşılaştıran ve halüsinasyonları
+                        engelleyen Yargıç Model (Judge Model).
+                    </p>
+                </div>
+
+                <div class="arch-card">
+                    <div class="arch-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </div>
+                    <h3 class="arch-title" data-i18n="card3_title">Otonom Akış İzleme</h3>
+                    <p class="arch-desc" data-i18n="card3_desc">
+                        LangSmith teknolojisi ile ajanın "Düşünce Zinciri"ni (Chain of Thought) ve araç kullanımını
+                        saniye saniye kaydeden audit sistemi.
+                    </p>
+                </div>
+
+                <div class="arch-card">
+                    <div class="arch-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="arch-title" data-i18n="card4_title">Indirect Injection Koruması</h3>
+                    <p class="arch-desc" data-i18n="card4_desc">
+                        Dış kaynaklardan gelen verileri (web, e-posta) sterilize eden ve ajanın manipüle edilmesini
+                        önleyen Sandbox yapısı.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="research" class="section-padding" style="background: rgba(255,255,255,0.02);">
+        <div class="container">
+            <h2 data-i18n="research_heading">Araştırma Verileri ve Dokümantasyon</h2>
+
+            <div class="tabs-container">
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="openTab(event, 'source')" data-i18n="tab_sources">Kaynaklar
+                        (Sources)</button>
+                    <button class="tab-btn" onclick="openTab(event, 'result')" data-i18n="tab_results">Sonuç Raporu
+                        (Results)</button>
+                    <button class="tab-btn" onclick="openTab(event, 'prompt')" data-i18n="tab_prompts">Prompt
+                        Mühendisliği</button>
+                </div>
+
+                <div id="source" class="tab-content active md-content">
+                    <h3 style="color:var(--primary-color)">research.gemini-pro.sources.md</h3>
+                    <p>Bu bölüm, projenin dayandığı akademik ve endüstriyel standartları listeler.</p>
+
+                    <div class="code-block">
+                        <div style="color: var(--secondary-color); margin-bottom:10px;">## 1. Endüstri Standartları
+                            (Standards)</div>
+                        <ul>
+                            <li><strong>OWASP Top 10 for LLM:</strong> LLM01: Prompt Injection ve LLM02: Insecure Output
+                                Handling başlıkları referans alınmıştır.</li>
+                            <li><strong>NIST AI RMF (1.0):</strong> Yapay zeka risk yönetimi çerçevesi ve "Map, Measure,
+                                Manage" fonksiyonları.</li>
+                        </ul>
+
+                        <div style="color: var(--secondary-color); margin-bottom:10px; margin-top:20px;">## 2. Akademik
+                            Literatür (Academic Papers)</div>
+                        <ul>
+                            <li><strong>"More than you've asked for" (Greshake et al., 2023):</strong> Indirect Prompt
+                                Injection saldırılarını tanımlayan temel makale.</li>
+                            <li><strong>"ToolLLM" (Qin et al., 2023):</strong> LLM'lerin API kullanım alışkanlıkları ve
+                                zaafiyetleri.</li>
+                            <li><strong>NeMo Guardrails Docs:</strong> NVIDIA'nın açık kaynaklı güvenlik korkulukları
+                                kütüphanesi.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="result" class="tab-content md-content">
+                    <h3 style="color:var(--primary-color)">research.gemini-pro.result.md</h3>
+                    <p>Araştırma sonucu ortaya çıkan teknik çözüm önerisi ve proje özeti.</p>
+
+                    <div class="code-block">
+                        <div style="color: var(--primary-color);">### Yönetici Özeti</div>
+                        <p>Mevcut LLM güvenlik araçları "eylem" (action) odaklı değildir. Bu proje, Action Hijacking
+                            riskini %90 oranında azaltan bir ara katman (middleware) önermektedir.</p>
+
+                        <div style="color: var(--primary-color); margin-top:15px;">### Kullanılan Teknolojiler</div>
+                        <table style="width:100%; border-collapse: collapse; margin-top:10px; color: #ccc;">
+                            <tr style="border-bottom:1px solid #333; text-align:left;">
+                                <th style="padding:10px;">Bileşen</th>
+                                <th style="padding:10px;">Araç</th>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px;">LLM Framework</td>
+                                <td style="padding:10px; color:var(--primary-color);">LangChain / LangGraph</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px;">Güvenlik (Guardrails)</td>
+                                <td style="padding:10px; color:var(--primary-color);">NVIDIA NeMo</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px;">Loglama (Tracing)</td>
+                                <td style="padding:10px; color:var(--primary-color);">LangSmith / Arize Phoenix</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="prompt" class="tab-content md-content">
+                    <h3 style="color:var(--primary-color)">research.gemini-fast.prompt.md</h3>
+                    <p>Bu sonuçlara ulaşmak için Yapay Zeka modeline (Gemini) iletilen sorgular.</p>
+
+                    <div class="code-block">
+                        <span style="color: #666;">// Prompt 1: Literatür Taraması</span><br>
+                        "Büyük Eylem Modelleri (LAM) ve Agentic AI sistemlerinde görülen temel güvenlik risklerini
+                        analiz et. Özellikle 'Action Hijacking' ve 'Indirect Prompt Injection' kavramlarını açıkla."
+                        <br><br>
+                        <span style="color: #666;">// Prompt 2: Teknik Çözüm</span><br>
+                        "Otonom yapay zeka ajanlarının API çağrılarını denetlemek için 'Guardrails' teknolojilerini
+                        araştır. NVIDIA NeMo Guardrails nasıl yapılandırılır?"
+                        <br><br>
+                        <span style="color: #666;">// Prompt 3: Sentez</span><br>
+                        "Yukarıdaki araştırmalara dayanarak, 'LAM Action Integrity Architect' projesi için akademik bir
+                        sonuç raporu oluştur."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="section-padding team-section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 50px;" data-i18n="team_title">Proje Ekibi</h2>
+
+            <div class="profile-card">
+                <div class="avatar">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <h3>Aziz Efe Çırak</h3>
+                <p style="color: var(--primary-color); margin-bottom: 10px;">Information Security Technology Student</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    İstinye Üniversitesi<br>
+                    2. Sınıf Öğrencisi
+                </p>
+                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                    <span class="badge">Cybersecurity</span>
+                    <span class="badge">AI Automation</span>
+                    <span class="badge">n8n</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <div>
+                <h3 style="color: #fff; margin-bottom: 10px;">LAM Architect</h3>
+                <p>© 2026 Aziz Efe Çırak. All rights reserved.</p>
+            </div>
+            <div>
+                <p style="font-family: var(--font-code);">Developed with Gemini 1.5 Pro</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 1. Language Data Object (Bilingual Content)
+        const translations = {
+            tr: {
+                nav_home: "Ana Sayfa",
+                nav_arch: "Mimari",
+                nav_research: "Araştırma",
+                nav_method: "Yöntem",
+                nav_team: "Ekip",
+                hero_badge: "SİBER GÜVENLİK PROJESİ",
+                hero_title: `Otonom Ajanlar için <br><span class="text-gradient">Eylem Bütünlüğü</span> Mimarisi`,
+                hero_sub: "Büyük Eylem Modellerinin (LAM) gerçekleştirdiği otonom API çağrılarını güvence altına alan, Action Hijacking ve Indirect Injection saldırılarına karşı yeni nesil koruma kalkanı.",
+                btn_explore: "Mimariyi Keşfet",
+                btn_docs: "Dokümanları İncele",
+                arch_badge: "ÇÖZÜM MİMARİSİ",
+                arch_title: "4 Katmanlı Güvenlik Modeli",
+                arch_desc: "Bu proje, klasik güvenlik duvarlarının yetersiz kaldığı 'ajan tabanlı' saldırılar için özel olarak tasarlanmış modüller içerir.",
+                card1_title: "Riskli Eylem Kütüphanesi",
+                card1_desc: "Kritik API işlemlerini (silme, transfer) regex tabanlı kurallarla kategorize eden politika motoru.",
+                card2_title: "Niyet-Eylem Doğrulama",
+                card2_desc: "Kullanıcının komutu ile modelin çıktısını karşılaştıran Yargıç Model.",
+                card3_title: "Otonom Akış İzleme",
+                card3_desc: "LangSmith ile ajanın 'Düşünce Zinciri'ni kaydeden audit sistemi.",
+                card4_title: "Indirect Injection Koruması",
+                card4_desc: "Dış verileri sterilize eden Sandbox yapısı.",
+                research_heading: "Araştırma Verileri",
+                tab_sources: "Kaynaklar",
+                tab_results: "Sonuçlar",
+                tab_prompts: "Promptlar",
+                team_title: "Proje Sahibi"
+            },
+            en: {
+                nav_home: "Home",
+                nav_arch: "Architecture",
+                nav_research: "Research",
+                nav_method: "Methodology",
+                nav_team: "Team",
+                hero_badge: "CYBERSECURITY PROJECT",
+                hero_title: `Action Integrity <br><span class="text-gradient">Architecture</span> for Agents`,
+                hero_sub: "A next-gen defense shield securing autonomous API calls made by Large Action Models (LAM) against Action Hijacking and Indirect Injection attacks.",
+                btn_explore: "Explore Architecture",
+                btn_docs: "View Docs",
+                arch_badge: "SOLUTION ARCHITECTURE",
+                arch_title: "4-Layer Security Model",
+                arch_desc: "This project includes modules designed specifically for 'agent-based' attacks where classic firewalls fail.",
+                card1_title: "Sensitive Action Library",
+                card1_desc: "Policy engine categorizing critical API operations using regex-based rules.",
+                card2_title: "Intent-Action Verification",
+                card2_desc: "Judge Model comparing user commands with model JSON outputs.",
+                card3_title: "Autonomous Flow Tracing",
+                card3_desc: "Audit system recording the agent's 'Chain of Thought' using LangSmith.",
+                card4_title: "Indirect Injection Protection",
+                card4_desc: "Sandbox structure sterilizing external data.",
+                research_heading: "Research Data",
+                tab_sources: "Sources",
+                tab_results: "Results",
+                tab_prompts: "Prompts",
+                team_title: "Project Owner"
+            }
+        };
+
+        // 2. Tab Switching Logic
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Hide all tab content
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+
+            // Remove active class from buttons
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show current tab and add active class
+            document.getElementById(tabName).style.display = "block";
+            setTimeout(() => {
+                document.getElementById(tabName).classList.add("active");
+            }, 10);
+            evt.currentTarget.className += " active";
+        }
+
+        // 3. Language Switching Logic
+        function setLanguage(lang) {
+            // Update buttons state
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.lang-btn[onclick="setLanguage('${lang}')"]`).classList.add('active');
+
+            // Update content based on data-i18n attributes
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    // Check if it's HTML content or simple text
+                    if (translations[lang][key].includes('<')) {
+                        el.innerHTML = translations[lang][key];
+                    } else {
+                        el.innerText = translations[lang][key];
+                    }
+                }
+            });
+
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+        }
+
+        // 4. Scroll Reveal Animation (Simple Intersection Observer)
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        // Apply animations to cards
+        document.querySelectorAll('.arch-card').forEach((el, index) => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = `all 0.5s ease ${index * 0.1}s`;
+            observer.observe(el);
+        });
+
+    </script>
+</body>
+
+</html>
