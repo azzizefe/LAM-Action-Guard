@@ -1,4 +1,3 @@
-# QLineSec
 # 🛡️ LAM-Action-Guard
 
 ![Version](https://img.shields.io/badge/version-0.1.0-blue) ![Status](https://img.shields.io/badge/status-Alpha-orange) ![Focus](https://img.shields.io/badge/focus-Agentic_AI_Security-red)
