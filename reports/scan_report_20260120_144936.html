@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>LAM-Action-Guard Raporu</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 20px; background: #0d1117; color: #c9d1d9; }
+        h1 { color: #58a6ff; }
+        .summary { display: flex; gap: 20px; margin: 20px 0; }
+        .stat { padding: 15px 25px; border-radius: 8px; background: #161b22; }
+        .stat.critical { border-left: 4px solid #f85149; }
+        .stat.high { border-left: 4px solid #f0883e; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #30363d; }
+        th { background: #161b22; }
+        tr.critical { background: rgba(248, 81, 73, 0.1); }
+        tr.high { background: rgba(240, 136, 62, 0.1); }
+        code { background: #21262d; padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ LAM-Action-Guard Güvenlik Raporu</h1>
+    <p><strong>Hedef:</strong> http://testphp.vulnweb.com | <strong>Tarih:</strong> 2026-01-20 14:49</p>
+    
+    <div class="summary">
+        <div class="stat critical"><strong>2</strong> Kritik</div>
+        <div class="stat high"><strong>2</strong> Yüksek</div>
+        <div class="stat"><strong>4</strong> Toplam</div>
+    </div>
+    
+    <table>
+        <thead><tr><th>Güvenlik Açığı</th><th>Önem</th><th>Payload</th></tr></thead>
+        <tbody>
+            <tr class="high">
+                <td>Basic Script Alert</td>
+                <td>High</td>
+                <td><code><script>alert('XSS')</script></code></td>
+            </tr>
+            
+            <tr class="critical">
+                <td>Simple OR Bypass</td>
+                <td>Critical</td>
+                <td><code>' OR '1'='1</code></td>
+            </tr>
+            
+            <tr class="critical">
+                <td>Union Select</td>
+                <td>Critical</td>
+                <td><code>' UNION SELECT 1, database(), user() -- </code></td>
+            </tr>
+            
+            <tr class="high">
+                <td>Comment Truncation</td>
+                <td>High</td>
+                <td><code>admin' --</code></td>
+            </tr>
+            </tbody>
+    </table>
+</body>
+</html>
