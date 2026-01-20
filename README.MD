@@ -1,92 +1,110 @@
-# LAM Action Integrity Architect
+# LAM Action Integrity Architect (Sızma Testi ve Ajan Güvenlik Mimarisi)
 
-**Hazırlayan:** Aziz Efe Çırak  
-**Tarih:** 19 Ocak 2026  
-**Kapsam:** Agentic AI Güvenliği, LAM Mimarisi ve Otonom Koruma Sistemleri
-
-Bu rapor, "LAM Action Integrity Architect" projesinin teknik altyapısını, endüstriyel konumunu ve güvenlik kritiklerini 5 ana başlık altında detaylandırmaktadır.
-
----
-
-## 1. Temel Çalışma Prensipleri (Core Working Principles)
-
-Bu teknolojinin merkezinde, **Deterministik Olmayan (Non-Deterministic)** LLM çıktıları ile **Deterministik (Kesin)** API uç noktaları arasında bir "Güvenlik Katmanı" (Security Middleware) oluşturmak yatar. Sistem 3 ana fazda çalışır:
-
-### A. Algılama ve Yakalama (Interception Phase)
-Geleneksel web güvenliğinin aksine, burada tehdit "dışarıdan içeriye" (gelen trafik) değil, "içeriden dışarıya" (ajanın ürettiği eylem) yöneliktir.
-1.  **Kullanıcı Girdisi:** Kullanıcı doğal dilde bir komut verir.
-2.  **LLM İşlemesi:** Ajan (Agent), bu komutu analiz eder ve bir "Araç Çağrısı" (Tool Call) üretir.
-3.  **Kanca (Hook):** Sistem, bu çağrı API'ye gitmeden *önce* araya girer (Interception).
-
-### B. Anlamsal ve Kural Tabanlı Doğrulama (Hybrid Verification)
-Sistem iki farklı doğrulama motorunu paralel çalıştırır:
-* **Statik Analiz (Static Analysis):** Regex ve ön tanımlı listeler (Allow/Block Lists) kullanılarak, çağrılan fonksiyonun kritiklik seviyesi kontrol edilir (Örn: `delete_database` fonksiyonu yasaklı mı?).
-* **Semantik Analiz (Semantic Analysis):** İkincil bir "Yargıç Model" (Judge Model), kullanıcının *niyeti* ile ajanın ürettiği *eylemi* vektörel uzayda karşılaştırır.
-    * *Prensip:* $Sim(Intent, Action) > Threshold$
-
-### C. Karar ve Yürütme (Decision & Execution)
-* **Pass:** Güvenlik skoru eşiğin üzerindeyse işlem API'ye iletilir.
-* **Block:** İşlem reddedilir ve kullanıcıya güvenlik uyarısı verilir.
-* **Human-in-the-Loop (HITL):** Risk skoru "Orta" seviyedeyse, işlem beklemeye alınır ve yetkili bir insandan onay istenir.
+**Versiyon:** 1.0.0
+**Yazar:** Aziz Efe Çırak
+**Durum:** ✅ Tamamlandı (Production Ready)
+**Kategori:** Agentic AI Security, Pentest Automation, DevSecOps
 
 ---
 
-## 2. En İyi Uygulama Yöntemleri ve Endüstri Standartları (Best Practices & Standards)
+## 📖 Proje Özeti ve Teknik Vizyon
 
-Agentic AI güvenliği için kabul görmüş global standartlar şunlardır:
+**LAM Action Integrity Architect**, yapay zeka ajanlarının (AI Agents) otonom eylemlerini güvence altına almak ve klasik sızma testi süreçlerini modern bir "Action Model" mimarisine dönüştürmek için tasarlanmış kapsamlı bir güvenlik platformudur.
 
-### Endüstri Standartları
-* **OWASP Top 10 for LLM Applications (2025 v1.1):**
-    * **LLM01 (Prompt Injection):** Sistemin, gizli talimatlarla manipüle edilmesini önlemek için "Girdi Sterilizasyonu" şarttır.
-    * **LLM02 (Insecure Output Handling):** Ajanın ürettiği çıktıların, arka uç sistemlerde (Backend) doğrudan çalıştırılmaması, mutlaka bir doğrulama katmanından geçmesi gerekir.
-    * **LLM05 (Supply Chain Vulnerabilities):** Kullanılan üçüncü parti ajan kütüphanelerinin (LangChain, AutoGPT vb.) güncel olması.
+Bu proje, sadece bir sızma testi aracı değildir; **Deterministik Olmayan (Non-Deterministic)** LLM çıktıları ile **Deterministik (Kesin)** sistem komutları arasında çalışan, gerçek zamanlı bir **"Güvenlik Katmanı" (Security Middleware)** olarak görev yapar. Ajanların veya güvenlik uzmanlarının gerçekleştireceği eylemleri "yakalar", "analiz eder" ve "güvenli bir şekilde" yürütür.
 
-* **NIST AI Risk Management Framework (AI RMF 1.0):**
-    * **Map:** Ajanın erişebileceği tüm API uç noktalarının haritalanması.
-    * **Measure:** Halüsinasyon oranlarının ve hatalı eylem sıklığının metriklerle ölçülmesi.
-    * **Manage:** Riskli eylemler için otomatik durdurma mekanizmalarının (Kill Switch) devreye alınması.
-
-### Best Practices (En İyi Uygulamalar)
-1.  **Least Privilege (En Az Yetki Prensibi):** Ajanlara asla "Admin" veya "Root" yetkisi verilmemelidir. Ajanın API token'ı sadece görevi için gerekli minimum endpoint'lere (örneğin sadece `read_email`, `send_email` değil) erişebilmelidir.
-2.  **Sandboxing (Kum Havuzu):** Ajanın çalıştırdığı kodlar (özellikle Python Code Interpreter kullanıyorsa) izole edilmiş Docker konteynerlerinde çalıştırılmalıdır.
-3.  **Dual-LLM Pattern:** Doğrulama yapan model ile eylemi üreten model farklı olmalıdır. (Örn: Eylem için GPT-4, Doğrulama için Claude 3 Opus veya özel eğitilmiş küçük bir model).
+Proje, üç farklı programlama dilinin (**Python, Bash, Go**) en güçlü yönlerini birleştirerek hibrit ve yüksek performanslı bir ekosistem sunar.
 
 ---
 
-## 3. Benzer Açık Kaynak Projeler ve Rakipler (Competitors & Ecosystem)
+## 🏗️ Mimari Derinlik ve Bileşenler
 
-Bu proje, hızla büyüyen "AI Security" pazarında yer almaktadır. Mevcut rakipler ve benzer projeler:
+Sistem, monolitik bir yapı yerine, her biri kendi alanında uzmanlaşmış mikro-araçlardan oluşan modüler bir mimariye sahiptir.
 
-| Proje / Ürün | Tür | Odak Noktası | Farkımız (USP) |
-| :--- | :--- | :--- | :--- |
-| **NVIDIA NeMo Guardrails** | Open Source | Diyalog yönetimi ve konu sınırlaması (Topical Guardrails). | Biz "Eylem" (Action) bütünlüğüne ve API güvenliğine odaklanıyoruz. |
-| **Guardrails AI** | Open Source | Pydantic tabanlı yapısal veri doğrulama (XML/JSON validasyonu). | Biz anlamsal (semantic) niyet doğrulaması yapıyoruz. |
-| **Lakera Guard** | Ticari (SaaS) | Prompt Injection tespiti üzerine uzmanlaşmış API. | Biz sadece girdiyi değil, *çıktıdaki eylemi* de denetliyoruz. |
-| **Rebuff** | Open Source | Çok katmanlı Prompt Injection koruması. | Biz "Agentic" iş akışlarına (Tools/Functions) özel mimari sunuyoruz. |
-| **LangSmith (LangChain)** | Platform | Trace ve Debugging. | Biz bir izleme aracı değil, aktif bir "Engelleme" (Prevention) sistemiyiz. |
+### 1. The Core Brain (Python & Engine Layer)
+Sistemin karar verici mekanizmasıdır.
+*   **Modül:** `src/main.py` ve `src/engine/`
+*   **İşlev:** CLI tabanlı yönetim, argüman işleme ve diğer alt modüllerin orkestrasyonu.
+*   **Gelişmiş Tarama Motoru (`advanced_scanner.py`):**
+    *   **Çoklu Vektör Analizi:** Sadece tek bir açık türüne odaklanmaz; XSS, SQL Injection, LFI (Local File Inclusion) ve RCE (Remote Code Execution) zafiyetlerini aynı anda tarar.
+    *   **Pattern Matching:** `src/templates/` altındaki JSON tabanlı saldırı şablonlarını kullanarak dinamik ve genişletilebilir bir test süreci yürütür.
+    *   **Zeka:** Basit string eşleşmesinin ötesinde, yanıttaki hata mesajlarını, dönen HTTP statü kodlarını ve zaman gecikmelerini (Time-Based SQLi) analiz eder.
+
+### 2. The Speed Layer (Go & Network Layer)
+Sistemin hız gerektiren operasyonları için tasarlanmıştır.
+*   **Modül:** `src/port_scanner.go`
+*   **Teknoloji:** Golang'in **Goroutines** ve **Channels** özelliklerini kullanır.
+*   **Performans:** Saniyeler içinde binlerce portu tarayabilme kapasitesine sahiptir (Concurrent Scanning).
+*   **Kullanım:** Hedef sistemin "nabzını" ölçer, erişilebilir servisleri belirler ve güvenlik testlerinin boşa gitmemesi için ön kontrol sağlar.
+
+### 3. The Automation Layer (Bash & Unix I/O)
+Sistemin işletim sistemi seviyesindeki gözü ve kulağıdır.
+*   **Modül:** `src/recon_automation.sh`
+*   **Felsefe:** Unix I/O prensipleri (Pipes, Streams, Redirections).
+*   **Yetenekler:** 
+    *   **Reconnaissance (Keşif):** Subdomain'leri bulur, canlı hostları (`httpx` mantığıyla) ayıklar.
+    *   **Entegrasyon:** `curl`, `nmap` ve diğer Unix araçlarını zincirleme bağlayarak karmaşık iş akışlarını tek komuta indirger.
 
 ---
 
-## 4. Kritik Yapılandırma Dosyaları ve Parametreleri
+## �️ Teknik Yetenekler ve Kapsam
 
-Projenin kalbi, kuralların tanımlandığı yapılandırma dosyalarıdır. Aşağıda örnek bir yapılandırma mimarisi sunulmuştur:
+Platform, aşağıdaki güvenlik alanlarında aktif koruma ve test yeteneği sunar:
 
-### A. `security_policy.yaml` (Ana Politika Dosyası)
-Sistemin genel davranışını belirleyen dosya.
+### A. Web Uygulama Güvenliği (Application Security)
+*   **XSS (Cross-Site Scripting):** Kullanıcı oturumlarını çalabilecek script enjeksiyonlarını tespit eder.
+*   **SQL Injection (SQLi):** Veritabanı sızıntısına yol açabilecek kritik sorgu hatalarını (Union-based, Boolean-based) yakalar.
+*   **LFI (Local File Inclusion):** Sunucu üzerindeki hassas dosyalara (`/etc/passwd`, `boot.ini`) erişim denemelerini simüle eder.
+*   **RCE (Command Injection):** İşletim sistemi seviyesinde komut çalıştırma açıklarını test eder.
 
-```yaml
-system_config:
-  mode: "strict" # options: strict, monitor_only, hybrid
-  risk_threshold: 0.85 # 0.0 - 1.0 arası (Daha düşük skorlar engellenir)
-  max_retries: 2 # Hatalı eylemde ajana kaç kez düzeltme şansı verileceği
+### B. Altyapı Güvenliği (Infrastructure Security)
+*   **Port & Servis Keşfi:** Açık kapıları ve arkasında çalışan servisleri (SSH, FTP, HTTP) tanımlar.
+*   **Subdomain Haritalama:** Hedef organizasyonun dijital ayak izini çıkarır.
 
-action_groups:
-  financial:
-    risk_level: "high"
-    requires_human_approval: true
-    allowed_endpoints: ["/api/v1/transfer", "/api/v1/pay"]
-  
-  informational:
-    risk_level: "low"
-    requires_human_approval: false
-    allowed_endpoints: ["/api/v1/balance", "/api/v1/transactions"]
+### C. Otonom Kontrol (Self-Governance)
+*   **Self-Check Mekanizması:** Sistem her başlatıldığında kendi bütünlüğünü (`project_info.json`, bağımlılıklar, dizin yapısı) kontrol eder (`src/utils/system_check.py`).
+*   **Raporlama:** İnsan müdahalesine gerek kalmadan, tüm bulguları HTML, JSON ve Markdown formatlarında raporlar.
+
+---
+
+## 📂 Bilgi Bankası ve Dokümantasyon
+
+Proje, sadece koddan ibaret değildir; aynı zamanda derinlemesine bir teknik bilgi bankası içerir:
+
+1.  **Sızma Testi Otomasyonu (`docs/sizma_testi_otomasyonu.md`):** Unix I/O, File Descriptors ve buffer stratejileri üzerine akademik düzeyde bilgi.
+2.  **Dil Karşılaştırması (`docs/guvenlik_dil_karsilastirmasi.md`):** Neden Go? Neden Python? Hangi dil hangi güvenlik görevinde kullanılmalı?
+3.  **İleri Teknikler (`docs/ileri_sizma_teknikleri.md`):** JSON-First parsing, stream analizi ve güvenli kodlama pratikleri.
+
+---
+
+## 💻 Nasıl Çalıştırılır?
+
+Proje "Plug-and-Play" (Tak ve Çalıştır) mantığıyla tasarlanmıştır.
+
+### 1. Kurulum
+```bash
+git clone https://github.com/aziz-efe/lam-action-integrity.git
+pip install -r requirements.txt
+# Go modülünü derle
+go build -o src/port_scanner.exe src/port_scanner.go
+```
+
+### 2. Otonom Tarama Başlatma
+```bash
+# Tam Kapsamlı Tarama (XSS, SQLi, LFI, RCE)
+python src/main.py --scan http://hedef-sistem.com --type all --advanced --report html
+```
+
+### 3. Sadece Keşif (Recon)
+```bash
+./src/recon_automation.sh -d hedef-sistem.com
+```
+
+### 4. Yüksek Hızlı Port Tarama
+```bash
+./src/port_scanner.exe -t hedef-sistem.com -top
+```
+
+---
+
+**LAM Action Integrity Architect**, modern sızma testi süreçlerini "Ajan Tabanlı" (Agentic) bir geleceğe hazırlayan, sağlam temellere dayalı bir mühendislik çalışmasıdır.
