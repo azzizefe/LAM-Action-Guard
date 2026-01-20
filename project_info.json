@@ -1,0 +1,27 @@
+{
+  "projectName": "LAM-Action-Guard",
+  "category": "Penetration Testing & Automation",
+  "author": "Aziz Efe Çırak",
+  "version": "1.0.0",
+  "description": "Sızma Testi Otomasyon Platformu - Pentest Automation Framework",
+  "features": [
+    "Güvenlik Açığı Tarama (XSS, SQLi, LFI, RCE)",
+    "Keşif Otomasyonu (Recon Automation)",
+    "Hızlı Port Tarama (Go)",
+    "Çoklu Dil Desteği (Bash, Python, Go)",
+    "JSON-First Raporlama",
+    "CI/CD Entegrasyonu",
+    "Self-Check Mekanizması"
+  ],
+  "tools": {
+    "recon_automation.sh": "Bash ile keşif otomasyonu",
+    "vuln_scanner.py": "Python güvenlik açığı tarayıcı",
+    "port_scanner.go": "Go ile hızlı port tarayıcı"
+  },
+  "requirements": {
+    "os": "Windows/Linux/macOS",
+    "python": "3.10+",
+    "go": "1.19+ (port_scanner için)",
+    "bash": "4.0+ (recon için)"
+  }
+}
